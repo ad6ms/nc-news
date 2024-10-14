@@ -8,7 +8,6 @@ function getTopics(request, response, next) {
       response.status(200).send({ topics });
     })
     .catch((err) => {
-      console.log(err, "ERROR IN THE CONTROLLER");
       next(err);
     });
 }
