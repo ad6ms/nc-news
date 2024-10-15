@@ -5,6 +5,7 @@ const getTopics = require("./controllers/topic-controller");
 const {
   getArticleById,
   getAllArticles,
+  getArticleComments,
 } = require("./controllers/article-controller");
 
 app.get("/api", (request, response) => {
@@ -16,6 +17,8 @@ app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles", getAllArticles);
+
+app.get("/api/articles/:article_id/comments", getArticleComments);
 
 app.use("/api/articles/:article_id", (err, request, response, next) => {
   if (err.code === "22P02") {

@@ -30,4 +30,17 @@ function fetchAllArticles() {
     });
 }
 
-module.exports = { fetchArticleById, fetchAllArticles };
+function fetchArticleComments(id) {
+  return fetchArticleById(id)
+    .then(() => {
+      return db.query(
+        `SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC`,
+        [id]
+      );
+    })
+    .then(({ rows }) => {
+      return rows;
+    });
+}
+
+module.exports = { fetchArticleById, fetchAllArticles, fetchArticleComments };
