@@ -63,6 +63,22 @@ describe("Testing endpoints in the app.js file", () => {
         );
       });
   });
+  test("GET: 400 - request to endpoint with invalid id will respond with invalid article id", () => {
+    return request(app)
+      .get("/api/articles/articleone")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Invalid article ID");
+      });
+  });
+  test("GET: 404 - requests to endpoint with valid id that doesnt exist will respond with 404 not found", () => {
+    return request(app)
+      .get("/api/articles/9999")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article not found");
+      });
+  });
   test("GET: 200 - request to /api/articles responds with all articles sorted by date", () => {
     return request(app)
       .get("/api/articles")
