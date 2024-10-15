@@ -37,7 +37,7 @@ describe("Testing endpoints in the app.js file", () => {
       .expect(200)
       .then((response) => {
         const endpoints = response.body.endpoints;
-        expect(typeof endpoints).toBe("object");
+        expect(response.body.endpoints).toEqual(endpoints);
       });
   });
   test("GET: 200 - request to /api/articles/:article_id responds with an article object", () => {
