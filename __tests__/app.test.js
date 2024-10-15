@@ -12,7 +12,7 @@ afterAll(() => {
   return db.end();
 });
 
-describe("Testing endpoints in the app.js file", () => {
+describe("Testing get endpoints in the app.js file", () => {
   test("GET: 200 - request to /api/topcs returns all available topics", () => {
     return request(app)
       .get("/api/topics")
@@ -136,6 +136,36 @@ describe("Testing endpoints in the app.js file", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Invalid article ID");
+      });
+  });
+  test("POST: 201 - requests to endpoint will add a comment to the specified article", () => {
+    const testComment = {
+      body: "comment",
+      username: "icellusedkars",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(testComment)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.newComment.author).toBe("icellusedkars");
+        expect(response.body.newComment.body).toBe("comment");
+        expect(response.body.newComment.votes).toBe(0);
+        expect(response.body.newComment.article_id).toBe(1);
+        expect(typeof response.body.newComment.comment_id).toBe("number");
+        expect(typeof response.body.newComment.created_at).toBe("string");
+      });
+  });
+  test("POST: 400 - requests to endpoint with invalid comment will return 400 invalid comment", () => {
+    const testComment = {
+      username: "icellusedkars",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(testComment)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Invalid comment");
       });
   });
 });
