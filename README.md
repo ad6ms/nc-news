@@ -6,9 +6,9 @@ If you wish to clone and use this repository please create the following files:
 
 - .env.development
 
-Once done, you will need to set the environment variable using PGDATABASE=your_database_name
+Once done, you will need to set the environment variable using PGDATABASE=nc_news
 
-Replace 'your_database_name' with the appropriate names for the test and development databases
+Please use nc_news_test for your .env.test file and just nc_news for your .env.development
 
 Make sure that your .env files are included in your .gitignore file
 
