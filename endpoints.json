@@ -51,5 +51,17 @@
       "votes": 0,
       "created_at": "2020-01-01T03:08:00.000Z"
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "allows user to post a comment to a specified article based on specified article_id",
+    "queries": ["article_id"],
+    "exampleResponse": {
+      "comment_id": 9,
+      "body": "Superficially charming",
+      "article_id": 1,
+      "author": "icellusedkars",
+      "votes": 0,
+      "created_at": "2020-01-01T03:08:00.000Z"
+    }
   }
 }
