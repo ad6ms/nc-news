@@ -100,6 +100,44 @@ describe("Testing endpoints in the app.js file", () => {
         });
       });
   });
+  test("GET: 200 - requests to the enpoint return all comments on an article", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.comments).toBeSortedBy("created_at", {
+          descending: true,
+        });
+        response.body.comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              article_id: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+  test("GET: 404 - requests to endpoint with a valid id that doesn't exist returns article not found", () => {
+    return request(app)
+      .get("/api/articles/9999/comments")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article not found");
+      });
+  });
+  test("GET: 400 - requests to enpoint with an invalid id returns invalid article ID", () => {
+    return request(app)
+      .get("/api/articles/articleone/comments")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Invalid article ID");
+      });
+  });
 });
 
 module.exports = app;
