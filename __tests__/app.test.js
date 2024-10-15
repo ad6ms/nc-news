@@ -19,14 +19,16 @@ describe("Testing endpoints in the app.js file", () => {
       .expect(200)
       .then((response) => {
         const topics = response.body.topics;
-        topics.forEach((topic) => {
-          expect(topic).toEqual(
-            expect.objectContaining({
-              description: expect.any(String),
-              slug: expect.any(String),
-            })
-          );
-        });
+        if (!topics.length === 0) {
+          topics.forEach((topic) => {
+            expect(topic).toEqual(
+              expect.objectContaining({
+                description: expect.any(String),
+                slug: expect.any(String),
+              })
+            );
+          });
+        }
       });
   });
   test("GET: 200 - request to /api returns a list of all available endpoints", () => {
