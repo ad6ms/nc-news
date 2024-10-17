@@ -17,7 +17,8 @@ function getArticleById(request, response, next) {
 }
 
 function getAllArticles(request, response, next) {
-  return fetchAllArticles()
+  const userQuery = request.query;
+  return fetchAllArticles(userQuery)
     .then((articles) => {
       response.status(200).send({ articles });
     })

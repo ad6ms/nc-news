@@ -245,6 +245,24 @@ describe("Testing get endpoints in the app.js file", () => {
         );
       });
   });
+  test("GET: 200 - requests to endpoint will accept sort by query and allow client to sort response by any valid column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("votes", {
+          descending: true,
+        });
+      });
+  });
+  test("GET: 400 - requests to endpoint with invalid queries returns 400 invalid query", () => {
+    return request(app)
+      .get("/api/articles?sort_by=colour")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Invalid query");
+      });
+  });
 });
 
 module.exports = app;
