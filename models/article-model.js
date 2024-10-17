@@ -43,4 +43,28 @@ function fetchArticleComments(id) {
     });
 }
 
-module.exports = { fetchArticleById, fetchAllArticles, fetchArticleComments };
+function patchAlterVotes(votes, id) {
+  if (typeof votes != "number") {
+    return Promise.reject({ status: 400, msg: "Invalid request" });
+  }
+  return db
+    .query(
+      `UPDATE articles
+            SET votes = votes + $1
+            WHERE article_id = $2 RETURNING *`,
+      [votes, id]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Article not found" });
+      }
+      return rows;
+    });
+}
+
+module.exports = {
+  fetchArticleById,
+  fetchAllArticles,
+  fetchArticleComments,
+  patchAlterVotes,
+};

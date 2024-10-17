@@ -2,6 +2,7 @@ const {
   fetchArticleById,
   fetchAllArticles,
   fetchArticleComments,
+  patchAlterVotes,
 } = require("../models/article-model");
 
 function getArticleById(request, response, next) {
@@ -36,4 +37,21 @@ function getArticleComments(request, response, next) {
     });
 }
 
-module.exports = { getArticleById, getAllArticles, getArticleComments };
+function alterVotes(request, response, next) {
+  const id = request.params.article_id;
+  const votes = request.body.inc_votes;
+  return patchAlterVotes(votes, id)
+    .then((article) => {
+      response.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = {
+  getArticleById,
+  getAllArticles,
+  getArticleComments,
+  alterVotes,
+};
