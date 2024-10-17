@@ -6,6 +6,7 @@ const {
   getArticleById,
   getAllArticles,
   getArticleComments,
+  alterVotes,
 } = require("./controllers/article-controller");
 const { addNewComment } = require("./controllers/comments-controller");
 
@@ -25,6 +26,8 @@ app.get("/api/articles/:article_id/comments", getArticleComments);
 
 app.post("/api/articles/:article_id/comments", addNewComment);
 
+app.patch("/api/articles/:article_id", alterVotes);
+
 app.use("/api/articles/:article_id", (err, request, response, next) => {
   if (err.code === "22P02") {
     response.status(400).send({ msg: "Invalid article ID" });
@@ -32,9 +35,9 @@ app.use("/api/articles/:article_id", (err, request, response, next) => {
   next(err);
 });
 
-app.use((err, req, res, next) => {
+app.use((err, request, response, next) => {
   if (err.status && err.msg) {
-    res.status(err.status).send({ msg: err.msg });
+    response.status(err.status).send({ msg: err.msg });
   }
 });
 

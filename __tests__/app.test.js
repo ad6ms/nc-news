@@ -3,6 +3,7 @@ const app = require("../app");
 const data = require("../db/data/test-data");
 const seed = require("../db/seeds/seed");
 const request = require("supertest");
+const { response } = require("express");
 
 beforeEach(() => {
   return seed(data);
@@ -166,6 +167,55 @@ describe("Testing get endpoints in the app.js file", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Invalid comment");
+      });
+  });
+  test("PATCH: 200 - requests to endpoint will update votes on article specified by article id", () => {
+    const testVotes = {
+      inc_votes: 10,
+    };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(testVotes)
+      .expect(200)
+      .then((response) => {
+        expect(response.body.article[0].votes).toBe(110);
+        expect(response.body.article[0].article_id).toBe(1);
+      });
+  });
+  test("PATCH: 400 - requests to endpoint with ivalid article id returns ivalid article error msg", () => {
+    const testVotes = {
+      inc_votes: 10,
+    };
+    return request(app)
+      .patch("/api/articles/one")
+      .send(testVotes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Invalid article ID");
+      });
+  });
+  test("PATCH: 404 - requests to endpoint with a valid article id that doesn't exist returns article not found error msg", () => {
+    const testVotes = {
+      inc_votes: 10,
+    };
+    return request(app)
+      .patch("/api/articles/9999")
+      .send(testVotes)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article not found");
+      });
+  });
+  test("PATCH: 400 - requests to endpoints without valid vote will return invalid request", () => {
+    const testVotes = {
+      inc_votes: "one",
+    };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(testVotes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Invalid request");
       });
   });
 });
