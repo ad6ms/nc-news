@@ -218,6 +218,17 @@ describe("Testing get endpoints in the app.js file", () => {
         expect(response.body.msg).toBe("Invalid request");
       });
   });
+  test("DELETE: 204 - requests to endpoint will delete specified comment by comment_id", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+  test("DELETE: 404 - requests to endpoint with valid comment that doesnt exist returns 404 comment not found", () => {
+    return request(app)
+      .delete("/api/comments/9999")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Comment not found");
+      });
+  });
 });
 
 module.exports = app;

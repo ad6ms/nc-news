@@ -8,7 +8,11 @@ const {
   getArticleComments,
   alterVotes,
 } = require("./controllers/article-controller");
-const { addNewComment } = require("./controllers/comments-controller");
+
+const {
+  addNewComment,
+  removeComment,
+} = require("./controllers/comments-controller");
 
 app.use(express.json());
 
@@ -27,6 +31,8 @@ app.get("/api/articles/:article_id/comments", getArticleComments);
 app.post("/api/articles/:article_id/comments", addNewComment);
 
 app.patch("/api/articles/:article_id", alterVotes);
+
+app.delete("/api/comments/:comment_id", removeComment);
 
 app.use("/api/articles/:article_id", (err, request, response, next) => {
   if (err.code === "22P02") {
