@@ -1,4 +1,4 @@
-const { postNewComment } = require("../models/comments-model");
+const { postNewComment, deleteComment } = require("../models/comments-model");
 
 function addNewComment(request, response, next) {
   const newComment = request.body;
@@ -15,4 +15,16 @@ function addNewComment(request, response, next) {
     });
 }
 
-module.exports = { addNewComment };
+function removeComment(request, response, next) {
+  const comment = request.params.comment_id;
+
+  return deleteComment(comment)
+    .then(() => {
+      response.status(204).send({ msg: "Succesfully deleted" });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = { addNewComment, removeComment };

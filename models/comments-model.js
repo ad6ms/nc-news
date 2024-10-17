@@ -16,4 +16,14 @@ function postNewComment(newComment, id) {
   });
 }
 
-module.exports = { postNewComment };
+function deleteComment(comment) {
+  return db
+    .query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [comment])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Comment not found" });
+      }
+    });
+}
+
+module.exports = { postNewComment, deleteComment };
