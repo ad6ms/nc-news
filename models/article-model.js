@@ -35,15 +35,19 @@ function fetchAllArticles(userQuery) {
     return Promise.reject({ status: 400, msg: "Invalid query" });
   }
 
-  let queryValues = [sort_by, order];
+  let queryValues = [];
   let queryString = `SELECT articles.author, articles.title, articles.article_id, 
   articles.topic, articles.created_at, articles.votes, 
   articles.article_img_url, COUNT(comments.article_id) 
-  AS comment_count FROM articles 
-  LEFT JOIN comments ON articles.article_id = comments.article_id 
-  GROUP BY articles.article_id ORDER BY ${sort_by} ${order}`;
+  AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id`;
 
-  return db.query(queryString).then(({ rows }) => {
+  if (userQuery.topic) {
+    queryString += ` WHERE articles.topic = $1`;
+    queryValues.push(userQuery.topic);
+  }
+
+  queryString += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order}`;
+  return db.query(queryString, queryValues).then(({ rows }) => {
     return rows;
   });
 }

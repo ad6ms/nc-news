@@ -263,6 +263,28 @@ describe("Testing get endpoints in the app.js file", () => {
         expect(response.body.msg).toBe("Invalid query");
       });
   });
+  test("GET: 200 - requests to endpoint return articles by topic query", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles.length).toBe(1);
+        expect(response.body.articles[0].topic).toBe("cats");
+      });
+  });
+  test("GET: 200 - requests to endpoint with multiple queries return correct articles", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch&sort_by=article_id&order=ASC")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("article_id", {
+          ascending: true,
+        });
+        response.body.articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
 });
 
 module.exports = app;
