@@ -14,6 +14,8 @@ const {
   removeComment,
 } = require("./controllers/comments-controller");
 
+const { getAllUsers } = require("./controllers/users-controller");
+
 app.use(express.json());
 
 app.get("/api", (request, response) => {
@@ -33,6 +35,8 @@ app.post("/api/articles/:article_id/comments", addNewComment);
 app.patch("/api/articles/:article_id", alterVotes);
 
 app.delete("/api/comments/:comment_id", removeComment);
+
+app.get("/api/users", getAllUsers);
 
 app.use("/api/articles/:article_id", (err, request, response, next) => {
   if (err.code === "22P02") {

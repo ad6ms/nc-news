@@ -229,6 +229,22 @@ describe("Testing get endpoints in the app.js file", () => {
         expect(response.body.msg).toBe("Comment not found");
       });
   });
+  test("GET: 200 - requests to endpoint will return array of all user objects", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        expect(
+          response.body.forEach((user) => {
+            expect.objectContaining({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String),
+            });
+          })
+        );
+      });
+  });
 });
 
 module.exports = app;
