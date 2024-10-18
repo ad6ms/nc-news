@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const endpoints = require("./endpoints.json");
-const getTopics = require("./controllers/topic-controller");
+const { getTopics, addNewTopic } = require("./controllers/topic-controller");
 const {
   getArticleById,
   getAllArticles,
@@ -48,6 +48,8 @@ app.get("/api/users/:username", getUserByUsername);
 app.patch("/api/comments/:comment_id", alterCommentVotes);
 
 app.post("/api/articles", addNewArticle);
+
+app.post("/api/topics", addNewTopic);
 
 app.use("/api/articles/:article_id", (err, request, response, next) => {
   if (err.code === "22P02") {

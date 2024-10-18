@@ -439,6 +439,33 @@ describe("Testing get endpoints in the app.js file", () => {
         });
       });
   });
+  test("POST: 201 - requests to endpoint will add a new topic", () => {
+    const newTopic = {
+      slug: "new topic",
+      description: "test description",
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(newTopic)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.createdTopic).toHaveProperty("slug");
+        expect(response.body.createdTopic).toHaveProperty("description");
+      });
+  });
+  test("POST: 400 - requests to endpoit with invalid topic properties returns 400 invalid topic", () => {
+    const newTopic = {
+      slug: 1,
+      description: 1,
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(newTopic)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Invalid topic");
+      });
+  });
 });
 
 module.exports = app;
