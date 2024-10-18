@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const format = require("pg-format");
 
 function fetchArticleById(id, userQuery) {
   return db
@@ -84,9 +85,36 @@ function patchAlterVotes(votes, id) {
     });
 }
 
+function postNewArticle(newArticle) {
+  const { title, topic, author, body } = newArticle;
+
+  const article_img_url =
+    newArticle.article_img_url ?? "https//www.image.com/photo";
+
+  const sql = format(
+    `INSERT INTO articles (title, topic, author, body, article_img_url) VALUES (%L) RETURNING article_id;`,
+    [title, topic, author, body, article_img_url]
+  );
+
+  if (!title || !topic || !author || !body) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+
+  return db
+    .query(sql)
+    .then(({ rows }) => {
+      const newArticleId = rows[0].article_id;
+      return fetchArticleById(newArticleId);
+    })
+    .then((createdArticle) => {
+      return createdArticle;
+    });
+}
+
 module.exports = {
   fetchArticleById,
   fetchAllArticles,
   fetchArticleComments,
   patchAlterVotes,
+  postNewArticle,
 };

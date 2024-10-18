@@ -343,13 +343,54 @@ describe("Testing get endpoints in the app.js file", () => {
         expect(response.body.msg).toBe("Comment not found");
       });
   });
-  test("PATCH: 400 - requeests to endpoint with invalid vote will return 400 bad request", () => {
+  test("PATCH: 400 - requests to endpoint with invalid vote will return 400 bad request", () => {
     const testVotes = {
       inc_votes: "one",
     };
     return request(app)
       .patch("/api/comments/1")
       .send(testVotes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("POST: 201 - requests to endpoint will add a new article", () => {
+    const newArticle = {
+      title: "New",
+      topic: "paper",
+      author: "butter_bridge",
+      body: "Cool new article",
+      article_img_url: "https://",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.article).toEqual({
+          article_id: 14,
+          title: "New",
+          topic: "paper",
+          author: "butter_bridge",
+          body: "Cool new article",
+          article_img_url: "https://",
+          comment_count: "0",
+          created_at: expect.any(String),
+          votes: 0,
+        });
+      });
+  });
+  test("POST: 400 - requests to endpoint with invalid properties will return 400 bad request", () => {
+    const newArticle = {
+      title: "New",
+      topic: "paper",
+      author: "butter_bridge",
+      article_img_url: "https://",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Bad request");

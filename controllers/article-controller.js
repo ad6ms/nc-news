@@ -3,6 +3,7 @@ const {
   fetchAllArticles,
   fetchArticleComments,
   patchAlterVotes,
+  postNewArticle,
 } = require("../models/article-model");
 
 function getArticleById(request, response, next) {
@@ -51,9 +52,22 @@ function alterVotes(request, response, next) {
     });
 }
 
+function addNewArticle(request, response, next) {
+  const newArticle = request.body;
+
+  return postNewArticle(newArticle)
+    .then((article) => {
+      response.status(201).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 module.exports = {
   getArticleById,
   getAllArticles,
   getArticleComments,
   alterVotes,
+  addNewArticle,
 };

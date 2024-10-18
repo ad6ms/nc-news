@@ -7,6 +7,7 @@ const {
   getAllArticles,
   getArticleComments,
   alterVotes,
+  addNewArticle,
 } = require("./controllers/article-controller");
 
 const {
@@ -45,6 +46,8 @@ app.get("/api/users", getAllUsers);
 app.get("/api/users/:username", getUserByUsername);
 
 app.patch("/api/comments/:comment_id", alterCommentVotes);
+
+app.post("/api/articles", addNewArticle);
 
 app.use("/api/articles/:article_id", (err, request, response, next) => {
   if (err.code === "22P02") {
