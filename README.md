@@ -1,17 +1,25 @@
 # Northcoders News API
 
-If you wish to clone and use this repository please create the following files:
+Hello,
+
+Welcome to nc_news, a backend project created as part of Northcoders learn to code Javascript fundamentsals course. If you wish to clone and use this repository please follow the setup below:
+
+1. Create two seperate .env files for your test and development databases.
 
 - .env.test
 
 - .env.development
 
-Once done, you will need to set the environment variable using PGDATABASE=nc_news
+2. Add PGDATABASE=nc_news_test to the test file and PGDATABASE=nc_news to the development file.
 
-Please use nc_news_test for your .env.test file and just nc_news for your .env.development
+3. Run 'npm install' in your terminal to install the dependencies used for this project.
 
-Make sure that your .env files are included in your .gitignore file
+4. Run 'npm run setup-dbs' in your terminal to drop and create the databases.
 
----
+5. Run 'npm run seed' in your terminal to seed the development database.
 
-This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
+6. To test the functionality, the tests are available in the '**tests**' folder. Run 'npm test' to run the test suite in full.
+
+Requirements: Postgres "^8.7.3", Node.js "^22.7.0"
+
+Link to hosted site: ...
