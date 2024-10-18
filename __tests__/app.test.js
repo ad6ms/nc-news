@@ -106,10 +106,10 @@ describe("Testing get endpoints in the app.js file", () => {
       .get("/api/articles/1/comments")
       .expect(200)
       .then((response) => {
-        expect(response.body.comments.rows.rows).toBeSortedBy("created_at", {
+        expect(response.body.comments).toBeSortedBy("created_at", {
           descending: true,
         });
-        response.body.comments.rows.rows.forEach((comment) => {
+        response.body.comments.forEach((comment) => {
           expect(comment).toEqual(
             expect.objectContaining({
               comment_id: expect.any(Number),
@@ -420,6 +420,23 @@ describe("Testing get endpoints in the app.js file", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Invalid limit");
+      });
+  });
+  test("GET: 200 - requests to endpoint will return a select number of comments on a specified article on article id and limit", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=5")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.comments.length).toBe(5);
+        response.body.comments.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id");
+          expect(comment).toHaveProperty("body");
+          expect(comment).toHaveProperty("article_id");
+          expect(comment).toHaveProperty("author");
+          expect(comment).toHaveProperty("votes");
+          expect(comment).toHaveProperty("created_at");
+          expect(comment.article_id).toBe(1);
+        });
       });
   });
 });

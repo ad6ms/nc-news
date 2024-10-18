@@ -58,16 +58,17 @@ function fetchAllArticles(userQuery) {
   });
 }
 
-function fetchArticleComments(id) {
+function fetchArticleComments(id, userQuery) {
+  const limit = userQuery.limit ?? 10;
   return fetchArticleById(id)
     .then(() => {
       return db.query(
-        `SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC`,
-        [id]
+        `SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC LIMIT $2`,
+        [id, limit]
       );
     })
-    .then((rows) => {
-      return { rows, total_count: rows.length };
+    .then(({ rows }) => {
+      return rows;
     });
 }
 
