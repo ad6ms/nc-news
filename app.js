@@ -8,6 +8,7 @@ const {
   getArticleComments,
   alterVotes,
   addNewArticle,
+  deleteArticle,
 } = require("./controllers/article-controller");
 
 const {
@@ -50,6 +51,8 @@ app.patch("/api/comments/:comment_id", alterCommentVotes);
 app.post("/api/articles", addNewArticle);
 
 app.post("/api/topics", addNewTopic);
+
+app.delete("/api/articles/:article_id", deleteArticle);
 
 app.use("/api/articles/:article_id", (err, request, response, next) => {
   if (err.code === "22P02") {
