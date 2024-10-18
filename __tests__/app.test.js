@@ -285,6 +285,14 @@ describe("Testing get endpoints in the app.js file", () => {
         });
       });
   });
+  test("GET: 200 - requests to endpoint with comment count query returns correct comment count for specified article", () => {
+    return request(app)
+      .get("/api/articles/1?comment_count")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.article.comment_count).toBe("11");
+      });
+  });
 });
 
 module.exports = app;

@@ -1,10 +1,10 @@
 const db = require("../db/connection");
 
-function fetchArticleById(id) {
+function fetchArticleById(id, userQuery) {
   return db
     .query(
-      `SELECT * FROM articles
-        WHERE article_id = $1;`,
+      `SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments on articles.article_id = comments.article_id
+        WHERE articles.article_id = $1 GROUP BY articles.article_id;`,
       [id]
     )
     .then(({ rows }) => {
