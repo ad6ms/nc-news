@@ -56,6 +56,13 @@ app.use("/api/articles/:article_id", (err, request, response, next) => {
   next(err);
 });
 
+app.use("/api/articles", (err, request, response, next) => {
+  if (err.code === "42703") {
+    response.status(400).send({ msg: "Invalid limit" });
+  }
+  next(err);
+});
+
 app.use((err, request, response, next) => {
   if (err.status && err.msg) {
     response.status(err.status).send({ msg: err.msg });

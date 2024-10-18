@@ -18,6 +18,7 @@ function fetchArticleById(id, userQuery) {
 
 function fetchAllArticles(userQuery) {
   const allowedInputs = [
+    "limit",
     "author",
     "titile",
     "article_id",
@@ -31,6 +32,7 @@ function fetchAllArticles(userQuery) {
 
   const sort_by = userQuery.sort_by ?? "created_at";
   const order = userQuery.order ?? "DESC";
+  const limit = userQuery.limit ?? 10;
 
   if (!allowedInputs.includes(sort_by) || !allowedInputs.includes(order)) {
     return Promise.reject({ status: 400, msg: "Invalid query" });
@@ -48,6 +50,9 @@ function fetchAllArticles(userQuery) {
   }
 
   queryString += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order}`;
+
+  queryString += ` LIMIT ${limit}`;
+
   return db.query(queryString, queryValues).then(({ rows }) => {
     return rows;
   });
@@ -61,8 +66,8 @@ function fetchArticleComments(id) {
         [id]
       );
     })
-    .then(({ rows }) => {
-      return rows;
+    .then((rows) => {
+      return { rows, total_count: rows.length };
     });
 }
 

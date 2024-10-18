@@ -85,7 +85,7 @@ describe("Testing get endpoints in the app.js file", () => {
       .get("/api/articles")
       .expect(200)
       .then((response) => {
-        expect(response.body.articles.length).toBe(13);
+        expect(response.body.articles.length).toBe(10);
         expect(response.body.articles).toBeSortedBy("created_at", {
           descending: true,
         });
@@ -106,10 +106,10 @@ describe("Testing get endpoints in the app.js file", () => {
       .get("/api/articles/1/comments")
       .expect(200)
       .then((response) => {
-        expect(response.body.comments).toBeSortedBy("created_at", {
+        expect(response.body.comments.rows.rows).toBeSortedBy("created_at", {
           descending: true,
         });
-        response.body.comments.forEach((comment) => {
+        response.body.comments.rows.rows.forEach((comment) => {
           expect(comment).toEqual(
             expect.objectContaining({
               comment_id: expect.any(Number),
@@ -394,6 +394,32 @@ describe("Testing get endpoints in the app.js file", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("GET: 200 - requests to endpoint will return select number of articles based on limit query", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch&limit=5")
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toHaveProperty("total_count");
+        expect(response.body.total_count).toBe(5);
+        response.body.articles.forEach((article) => {
+          expect(article).toHaveProperty("title");
+          expect(article).toHaveProperty("topic");
+          expect(article).toHaveProperty("author");
+          expect(article).toHaveProperty("created_at");
+          expect(article).toHaveProperty("article_id");
+          expect(article).toHaveProperty("votes");
+          expect(article).toHaveProperty("article_img_url");
+        });
+      });
+  });
+  test("GET: 400 - requests to endpoint with invalid limit return 400 invalid limit", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch&limit=ten")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Invalid limit");
       });
   });
 });
