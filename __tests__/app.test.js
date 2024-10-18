@@ -466,6 +466,25 @@ describe("Testing get endpoints in the app.js file", () => {
         expect(response.body.msg).toBe("Invalid topic");
       });
   });
+  test("DELETE: 204 - requests to endpoint delete article and comments based on article id", () => {
+    return request(app).delete("/api/articles/1").expect(204);
+  });
+  test("DELETE: 400 -  requests to endpoint with invalid article id returns 400 invalid id", () => {
+    return request(app)
+      .delete("/api/articles/one")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Invalid article ID");
+      });
+  });
+  test("DELETE: 404 - requests to endpoint with valid article id that doesn't exist returns 404 article not found", () => {
+    return request(app)
+      .delete("/api/articles/9999")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article not found");
+      });
+  });
 });
 
 module.exports = app;

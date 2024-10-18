@@ -4,6 +4,7 @@ const {
   fetchArticleComments,
   patchAlterVotes,
   postNewArticle,
+  removeArticle,
 } = require("../models/article-model");
 
 function getArticleById(request, response, next) {
@@ -65,10 +66,23 @@ function addNewArticle(request, response, next) {
     });
 }
 
+function deleteArticle(request, response, next) {
+  const articleId = request.params.article_id;
+
+  return removeArticle(articleId)
+    .then(() => {
+      response.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 module.exports = {
   getArticleById,
   getAllArticles,
   getArticleComments,
   alterVotes,
   addNewArticle,
+  deleteArticle,
 };
