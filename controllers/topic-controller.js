@@ -1,6 +1,4 @@
-const express = require("express");
-const request = require("express");
-const fetchTopics = require("../models/topic-model");
+const { fetchTopics, postNewTopic } = require("../models/topic-model");
 
 function getTopics(request, response, next) {
   fetchTopics()
@@ -12,4 +10,16 @@ function getTopics(request, response, next) {
     });
 }
 
-module.exports = getTopics;
+function addNewTopic(request, response, next) {
+  const newTopic = request.body;
+
+  return postNewTopic(newTopic)
+    .then((createdTopic) => {
+      response.status(201).send({ createdTopic });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = { getTopics, addNewTopic };
