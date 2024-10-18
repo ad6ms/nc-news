@@ -7,7 +7,8 @@ const {
 
 function getArticleById(request, response, next) {
   const id = request.params.article_id;
-  return fetchArticleById(id)
+  const userQuery = request.query;
+  return fetchArticleById(id, userQuery)
     .then((article) => {
       response.status(200).send({ article });
     })
