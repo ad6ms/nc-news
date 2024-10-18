@@ -293,6 +293,27 @@ describe("Testing get endpoints in the app.js file", () => {
         expect(response.body.article.comment_count).toBe("11");
       });
   });
+  test("GET: 200 - requests to endpoint will return a user based on specified username", () => {
+    return request(app)
+      .get("/api/users/rogersop")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.user).toEqual({
+          username: "rogersop",
+          name: "paul",
+          avatar_url:
+            "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+        });
+      });
+  });
+  test("GET: 404 - requests to endpoint with a username that doesn't exist will return 404 user not found", () => {
+    return request(app)
+      .get("/api/users/dog")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("User not found");
+      });
+  });
 });
 
 module.exports = app;
