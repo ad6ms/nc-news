@@ -22,7 +22,7 @@ function getAllArticles(request, response, next) {
   const userQuery = request.query;
   return fetchAllArticles(userQuery)
     .then((articles) => {
-      response.status(200).send({ articles });
+      response.status(200).send({ articles, total_count: articles.length });
     })
     .catch((err) => {
       next(err);
