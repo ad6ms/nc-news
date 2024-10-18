@@ -31,9 +31,10 @@ function getAllArticles(request, response, next) {
 
 function getArticleComments(request, response, next) {
   const id = request.params.article_id;
-  return fetchArticleComments(id)
+  const userQuery = request.query;
+  return fetchArticleComments(id, userQuery)
     .then((comments) => {
-      response.status(200).send({ comments });
+      response.status(200).send({ comments, total_count: comments.length });
     })
     .catch((err) => {
       next(err);
