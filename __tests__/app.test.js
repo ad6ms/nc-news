@@ -314,6 +314,47 @@ describe("Testing get endpoints in the app.js file", () => {
         expect(response.body.msg).toBe("User not found");
       });
   });
+  test("PATCH: 200 - requests to endpoint allow user to alter votes on comments by specified comment id", () => {
+    const testVotes = {
+      inc_votes: 1,
+    };
+    return request(app)
+      .patch("/api/comments/1")
+      .send(testVotes)
+      .expect(200)
+      .then((response) => {
+        expect(response.body.comment[0].votes).toBe(17);
+        expect(response.body.comment[0].comment_id).toBe(1);
+        expect(response.body.comment[0].article_id).toBe(9);
+        expect(response.body.comment[0].created_at).toBe(
+          "2020-04-06T12:17:00.000Z"
+        );
+      });
+  });
+  test("PATCH: 404 - requests to endpoint with valid comment id that doesnt exist returns 404 comment not found", () => {
+    const testVotes = {
+      inc_votes: 1,
+    };
+    return request(app)
+      .patch("/api/comments/9999")
+      .send(testVotes)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Comment not found");
+      });
+  });
+  test("PATCH: 400 - requeests to endpoint with invalid vote will return 400 bad request", () => {
+    const testVotes = {
+      inc_votes: "one",
+    };
+    return request(app)
+      .patch("/api/comments/1")
+      .send(testVotes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
 });
 
 module.exports = app;

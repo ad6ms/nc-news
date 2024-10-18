@@ -1,4 +1,8 @@
-const { postNewComment, deleteComment } = require("../models/comments-model");
+const {
+  postNewComment,
+  deleteComment,
+  changeCommentVotes,
+} = require("../models/comments-model");
 
 function addNewComment(request, response, next) {
   const newComment = request.body;
@@ -27,4 +31,17 @@ function removeComment(request, response, next) {
     });
 }
 
-module.exports = { addNewComment, removeComment };
+function alterCommentVotes(request, response, next) {
+  const commentId = request.params.comment_id;
+  const newVote = request.body.inc_votes;
+
+  return changeCommentVotes(newVote, commentId)
+    .then((comment) => {
+      response.status(200).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = { addNewComment, removeComment, alterCommentVotes };
