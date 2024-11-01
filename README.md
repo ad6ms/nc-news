@@ -22,4 +22,4 @@ Welcome to nc_news, a backend project created as part of Northcoders learn to co
 
 Requirements: Postgres "^8.7.3", Node.js "^22.7.0"
 
-Link to hosted site: ...
+Link to hosted site: https://nc-news-r6j6.onrender.com/api
